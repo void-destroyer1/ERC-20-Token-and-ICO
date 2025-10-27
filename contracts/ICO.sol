@@ -13,6 +13,7 @@ contract ICO is Ownable {
 
     // --- Events ---
     event TokensPurchased(address indexed purchaser, address indexed beneficiary, uint256 value, uint256 amount);
+    event Withdrawal(address indexed owner, uint256 amount); // Added event
 
     // --- Constructor ---
     constructor(uint256 _rate, address _tokenAddress) {
@@ -32,43 +33,43 @@ contract ICO is Ownable {
 
     /**
      * @dev Fallback function called when Ether is sent to the contract.
-     * Allows users to purchase tokens by sending native currency.
      */
     receive() external payable {
         uint256 weiAmount = msg.value;
         require(weiAmount > 0, "ICO: Sent Wei must be greater than zero");
 
-        // Calculate the amount of tokens to send
         uint256 tokensToSend = _getTokenAmount(weiAmount);
-
-        // Require that the ICO contract has enough tokens to sell
         require(token.balanceOf(address(this)) >= tokensToSend, "ICO: Not enough tokens in contract to sell");
 
-        // Increment the total wei raised
         weiRaised += weiAmount;
-
-        // Transfer the tokens to the buyer (msg.sender)
-        // IMPORTANT: The ICO contract MUST hold the tokens being sold!
-        // The owner needs to transfer the tokens to this ICO contract address after deployment.
         token.transfer(msg.sender, tokensToSend);
 
-        // Emit the event
         emit TokensPurchased(msg.sender, msg.sender, weiAmount, tokensToSend);
-
         console.log("Tokens purchased by %s: %s tokens for %s Wei", msg.sender, tokensToSend, weiAmount);
     }
 
     /**
-     * @dev Internal function to calculate token amount based on wei amount and rate.
-     * @param _weiAmount Amount of wei sent by the buyer.
-     * @return amount of tokens to be transferred.
+     * @dev Internal function to calculate token amount.
      */
     function _getTokenAmount(uint256 _weiAmount) internal view returns (uint256) {
-        // Note: Assumes token has standard 18 decimals. Adjust if different.
-        // Calculation: weiAmount * rate
         return _weiAmount * rate;
     }
 
-    // --- Owner Functions (Withdrawal to be added next) ---
+    // --- Owner Functions ---
 
+    /**
+     * @dev Allows the owner to withdraw the collected Ether/CORE.
+     */
+    function withdraw() public onlyOwner {
+        uint256 balance = address(this).balance;
+        require(balance > 0, "ICO: No funds to withdraw");
+
+        // Transfer the entire contract balance to the owner
+        // Using .call() is the recommended secure way to send Ether
+        (bool sent, ) = owner().call{value: balance}("");
+        require(sent, "ICO: Failed to send Ether");
+
+        emit Withdrawal(owner(), balance); // Emit the event
+        console.log("Withdrawal by owner %s: %s Wei", owner(), balance);
+    }
 }
