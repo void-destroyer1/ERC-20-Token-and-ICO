@@ -27,7 +27,9 @@ contract ICO is Ownable {
      * @param _saleCap Maximum amount of Wei to raise
      * @param _durationInSeconds How long the sale should last from deployment
      */
-    constructor(uint256 _rate, address _tokenAddress, uint256 _saleCap, uint256 _durationInSeconds) {
+    constructor(uint256 _rate, address _tokenAddress, uint256 _saleCap, uint256 _durationInSeconds)
+        Ownable(msg.sender) // <-- THIS LINE IS THE FIX
+    {
         require(_rate > 0, "ICO: Rate must be greater than zero");
         require(_tokenAddress != address(0), "ICO: Token address cannot be zero");
         require(_saleCap > 0, "ICO: Cap must be greater than zero");
