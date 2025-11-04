@@ -1,8 +1,14 @@
 # **ERC-20 Token & ICO Smart Contract**
 
-![MyToken.sol Deployed](https://res.cloudinary.com/dzwxshzzl/image/upload/v1762201594/MyToken_woop87.png)
+![MyToken.sol Deployed](https://res.cloudinary.com/dzwxshzzl/image/upload/v1762277986/MyToken_xlinkz.png)
 
-![ICO.sol Deployed](https://res.cloudinary.com/dzwxshzzl/image/upload/v1762201594/ICO_jw54uq.png)
+## **MyToken Contract Address**
+0xc6FB7d2f517C3f73f9A575Cb0b2cA7eFc60cBB72
+
+![ICO.sol Deployed](https://res.cloudinary.com/dzwxshzzl/image/upload/v1762277986/ICO_sffxuq.png)
+
+## **ICO Contract Address**
+0xbBfF2a7A7d8B11F88A3c87F44199eBe0d16CF017
 
 This project is a complete, working implementation of a standard ERC-20 token and a feature-rich Initial Coin Offering (ICO) smart contract. It is built using Solidity, the Hardhat development environment, and OpenZeppelin Contracts for security and standard compliance.
 
